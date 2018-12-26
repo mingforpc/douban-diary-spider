@@ -27,7 +27,7 @@ class DiarySpiderSpider(scrapy.Spider):
         item = DoubanDiarySpiderItem()
 
         item['url'] = response.url
-        item['titme'] = response.xpath('//*[@class="note-container"]/div[1]/h1').extract()
+        item['time'] = response.xpath('//*[@class="note-container"]/div[1]/h1').extract()
         item['create_datetime'] = response.xpath('//*[@class="note-container"]/div[1]/div/*[@class="pub-date"]').extract()
         item['content'] = response.xpath('//*[@id="link-report"]').extract()
         item['image_urls'] =response.xpath('//*[@id="link-report"]/div[class="cc"]/table/tbody/tr/td/img/@src').extract()
@@ -113,10 +113,11 @@ class DiarySpiderSpider(scrapy.Spider):
         """
         diary_urls = response.xpath('//*[@class="note-container"]/@data-url').extract()
         print(diary_urls)
-        # TODO: 将diary_urls中的url加入到start_urls中
-        self.start_urls.append(diary_urls)
+        for url in diary_urls:
+            yield scrapy.Request(url, dont_filter=True)
 
         next_page = response.xpath('//*[@id="content"]/div/div[1]/div[34]/span[3]/link/@href').extract()
         if len(next_page) > 0:
             # 有下一页
             yield scrapy.Request(next_page[0], callback=self.parse_all_diary_page)
+
