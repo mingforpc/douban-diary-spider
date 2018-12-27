@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import os
 # Scrapy settings for douban_diary_spider project
 #
 # For simplicity, this file contains only settings considered important or
@@ -65,9 +65,12 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'douban_diary_spider.pipelines.DoubanDiarySpiderPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'scrapy.contrib.pipeline.images.ImagesPipeline': 1,
+    # 'douban_diary_spider.pipelines.DoubanDiarySpiderPipeline': 300,
+}
+
+IMAGES_STORE = os.getcwd() + "/" + "imgs"
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
