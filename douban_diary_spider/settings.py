@@ -19,7 +19,7 @@ NEWSPIDER_MODULE = 'douban_diary_spider.spiders'
 #USER_AGENT = 'douban_diary_spider (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -67,10 +67,13 @@ DOWNLOADER_MIDDLEWARES = {
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
     'scrapy.contrib.pipeline.images.ImagesPipeline': 1,
-    # 'douban_diary_spider.pipelines.DoubanDiarySpiderPipeline': 300,
+    'douban_diary_spider.pipelines.DoubanDiarySpiderPipeline': 300,
 }
 
 IMAGES_STORE = os.getcwd() + "/" + "imgs"
+
+DIARY_STORE = os.getcwd() + "/" + "diary"
+
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
@@ -92,3 +95,14 @@ IMAGES_STORE = os.getcwd() + "/" + "imgs"
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+
+HEXO_TITLE_TEMPLATE = """---
+title: {title}
+categories:
+  - 
+  - 
+date: {date}
+---\n"""
+
+TARGET_NODE_URL = "https://www.douban.com/people/xxxxx/notes"

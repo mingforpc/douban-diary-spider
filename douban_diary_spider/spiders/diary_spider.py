@@ -1,20 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import os
-import scrapy
-from douban_diary_spider.items import DoubanDiarySpiderItem
 
-CURRENT_PATH = os.getcwd()
+import scrapy
+from douban_diary_spider.settings import TARGET_NODE_URL
+from douban_diary_spider.items import DoubanDiarySpiderItem
 
 
 class DiarySpiderSpider(scrapy.Spider):
     name = 'douban_daily'
     allowed_domains = ['douban.com']
     start_urls = []
-    note_url = 'https://www.douban.com/people/xxxxx/notes'
-
-    # TODO: 保存login页面的response
-    login_response = None
+    note_url = TARGET_NODE_URL
 
     def parse(self, response):
         """
@@ -25,12 +21,11 @@ class DiarySpiderSpider(scrapy.Spider):
         item = DoubanDiarySpiderItem()
 
         item['url'] = response.url
-        item['time'] = response.xpath('//*[@class="note-container"]/div[1]/h1').extract()
-        item['create_datetime'] = response.xpath('//*[@class="note-container"]/div[1]/div/*[@class="pub-date"]').extract()
-        item['content'] = response.xpath('//*[@id="link-report"]').extract()
-        item['image_urls'] = response.xpath('//*[@id="link-report"]/div[class="cc"]/table/tbody/tr/td/img/@src').extract()
+        item['title'] = response.xpath('//*[@class="note-container"]/div[1]/h1/text()').extract()[0]
+        item['create_datetime'] = response.xpath('//*[@class="note-container"]/div[1]/div/*[@class="pub-date"]/text()').extract()[0]
+        item['content'] = response.xpath('//*[@id="link-report"]').extract()[0]
+        item['image_urls'] = response.xpath('//*[@id="link-report"]/*[@class="cc"]/table/tr/td/img/@src').extract()
 
-        print(item)
         yield item
 
     def start_requests(self):
